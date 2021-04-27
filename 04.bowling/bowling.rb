@@ -37,7 +37,7 @@ class Bowling
     shots.each_slice(2) do |shot|
       if frames.size <= 9
         frames << shot
-      elsif frames.size == 10
+      else
         # 三投目があれば最後の配列は3つにする
         frames[9] += shot
       end
@@ -63,9 +63,7 @@ class Bowling
     end
 
     indexes[:strike_indexes].each do |strike_index|
-      frames[strike_index] << if frames[strike_index..(strike_index + 2)] == [[10, 0]] * 3
-                                20
-                              elsif frames[strike_index..(strike_index + 1)] == [[10, 0]] * 2
+      frames[strike_index] << if frames[strike_index..(strike_index + 1)] == [[10, 0]] * 2 || frames[strike_index..(strike_index + 2)] == [[10, 0]] * 3
                                 10 + frames[strike_index + 2][0]
                               else
                                 frames[strike_index + 1][0..1].sum
