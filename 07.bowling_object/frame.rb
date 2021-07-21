@@ -14,7 +14,7 @@ class Frame
   end
 
   def strike?
-    first_shot.mark == 'X'
+    first_shot.mark == 'X' && second_shot.mark.nil?
   end
 
   def spare?
