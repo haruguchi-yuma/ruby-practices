@@ -3,7 +3,7 @@ require 'minitest/autorun'
 require_relative '../ls'
 
 class LsTest < Minitest::Test
-  TARGET_PATHNAME = Pathname('test/sample-app')
+  TARGET_PATHNAME = Pathname('test/sample-app/*')
 
   def test_run_ls_short_format
     ls = Ls.new(TARGET_PATHNAME,**{ detail: false, reverse: false, dot_match: false })
@@ -42,12 +42,15 @@ class LsTest < Minitest::Test
   def test_run_ls_dot_match
     ls = Ls.new(TARGET_PATHNAME,**{ detail: false, reverse: false, dot_match: true })
     expected = <<~TEXT.chomp
-      .                 README.md         config.ru         postcss.config.js
-      ..                Rakefile          db                public
-      .browserslistrc   app               lib               test
-      .ruby-version     babel.config.js   log               tmp
-      Gemfile           bin               node_modules      vendor
-      Gemfile.lock      config            package.json      yarn.lock
+    .                 Rakefile          node_modules
+    ..                app               package.json
+    .browserslistrc   babel.config.js   postcss.config.js
+    .gitignore        bin               public
+    .rubocop.yml      config            storage
+    .ruby-version     config.ru         test
+    Gemfile           db                tmp
+    Gemfile.lock      lib               vendor
+    README.md         log               yarn.lock
     TEXT
     assert_equal expected, ls.run_ls
   end
