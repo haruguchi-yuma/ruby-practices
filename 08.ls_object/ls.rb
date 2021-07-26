@@ -1,5 +1,6 @@
 require_relative './command'
 require_relative './short_format'
+require_relative './long_format'
 
 class Ls
   def initialize(pathnames, params)
