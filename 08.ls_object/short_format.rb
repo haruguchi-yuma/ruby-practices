@@ -20,6 +20,8 @@ class ShortFormat
     format_table(transposed_filenames, max_filename_count)
   end
 
+  private
+
   def transpose_file(filenames)
     filenames[0].zip(*filenames[1..-1])
   end
