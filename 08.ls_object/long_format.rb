@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'pathname'
 require 'etc'
 
@@ -10,8 +12,8 @@ class LongFormat
     '3' => '-wx',
     '2' => '-w-',
     '1' => '--x',
-    '0' => '---',
-  }
+    '0' => '---'
+  }.freeze
 
   def initialize(filenames)
     @pathnames =
@@ -45,14 +47,14 @@ class LongFormat
     stat = pathname.stat
     ret = ''
     ret += stat.file? ? '-' : 'd'
-    mode = sprintf("%#o", stat.mode.to_s)[-3..-1]
+    mode = format('%#o', stat.mode.to_s)[-3..-1]
     ret += format_mode(mode)
     ret += "  #{stat.nlink.to_s.rjust(max_nlink)}"
     ret += " #{Etc.getpwuid(stat.uid).name.rjust(max_user_length)}"
     ret += "  #{Etc.getgrgid(stat.gid).name.rjust(max_group_length)}"
     ret += "  #{stat.size.to_s.rjust(max_size)}"
-    ret += " #{stat.mtime.strftime("%_m %d %R")}"
-    ret += " #{pathname.basename}"
+    ret += " #{stat.mtime.strftime('%_m %d %R')}"
+    ret + " #{pathname.basename}"
   end
 
   def format_mode(mode)

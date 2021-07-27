@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'pathname'
 require 'minitest/autorun'
 require_relative '../ls'
@@ -6,57 +8,57 @@ class LsTest < Minitest::Test
   TARGET_PATHNAME = Pathname('test/sample-app')
 
   def test_run_ls_short_format
-    ls = Ls.new(TARGET_PATHNAME.join('*'),**{ detail: false, reverse: false, dot_match: false })
+    ls = Ls.new(TARGET_PATHNAME.join('*'), **{ detail: false, reverse: false, dot_match: false })
     expected = <<~TEXT.chomp
-    Gemfile           config            postcss.config.js
-    Gemfile.lock      config.ru         public
-    README.md         db                storage
-    Rakefile          lib               test
-    app               log               tmp
-    babel.config.js   node_modules      vendor
-    bin               package.json      yarn.lock
+      Gemfile           config            postcss.config.js
+      Gemfile.lock      config.ru         public
+      README.md         db                storage
+      Rakefile          lib               test
+      app               log               tmp
+      babel.config.js   node_modules      vendor
+      bin               package.json      yarn.lock
     TEXT
     assert_equal expected, ls.run_ls
   end
 
   def test_run_ls_long_format
-    ls = Ls.new(TARGET_PATHNAME.join('*'),**{ detail: true, reverse: false, dot_match: false })
+    ls = Ls.new(TARGET_PATHNAME.join('*'), **{ detail: true, reverse: false, dot_match: false })
     expected = `ls -l #{TARGET_PATHNAME}`.chomp
     assert_equal expected, ls.run_ls
   end
 
   def test_run_ls_reverse
-    ls = Ls.new(TARGET_PATHNAME.join('*'),**{ detail: false, reverse: true, dot_match: false })
+    ls = Ls.new(TARGET_PATHNAME.join('*'), **{ detail: false, reverse: true, dot_match: false })
     expected = <<~TEXT.chomp
-    yarn.lock         package.json      bin
-    vendor            node_modules      babel.config.js
-    tmp               log               app
-    test              lib               Rakefile
-    storage           db                README.md
-    public            config.ru         Gemfile.lock
-    postcss.config.js config            Gemfile
+      yarn.lock         package.json      bin
+      vendor            node_modules      babel.config.js
+      tmp               log               app
+      test              lib               Rakefile
+      storage           db                README.md
+      public            config.ru         Gemfile.lock
+      postcss.config.js config            Gemfile
     TEXT
     assert_equal expected, ls.run_ls
   end
 
   def test_run_ls_dot_match
-    ls = Ls.new(TARGET_PATHNAME.join('*'),**{ detail: false, reverse: false, dot_match: true })
+    ls = Ls.new(TARGET_PATHNAME.join('*'), **{ detail: false, reverse: false, dot_match: true })
     expected = <<~TEXT.chomp
-    .                 Rakefile          node_modules
-    ..                app               package.json
-    .browserslistrc   babel.config.js   postcss.config.js
-    .gitignore        bin               public
-    .rubocop.yml      config            storage
-    .ruby-version     config.ru         test
-    Gemfile           db                tmp
-    Gemfile.lock      lib               vendor
-    README.md         log               yarn.lock
+      .                 Rakefile          node_modules
+      ..                app               package.json
+      .browserslistrc   babel.config.js   postcss.config.js
+      .gitignore        bin               public
+      .rubocop.yml      config            storage
+      .ruby-version     config.ru         test
+      Gemfile           db                tmp
+      Gemfile.lock      lib               vendor
+      README.md         log               yarn.lock
     TEXT
     assert_equal expected, ls.run_ls
   end
 
   def test_run_ls_all_options
-    ls = Ls.new(TARGET_PATHNAME.join('*'),**{ detail: true, reverse: true, dot_match: true })
+    ls = Ls.new(TARGET_PATHNAME.join('*'), **{ detail: true, reverse: true, dot_match: true })
     expected = `ls -arl #{TARGET_PATHNAME}`.chomp
     assert_equal expected, ls.run_ls
   end

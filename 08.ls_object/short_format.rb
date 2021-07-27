@@ -1,10 +1,12 @@
+# frozen_string_literal: true
+
 require 'pathname'
 
 class ShortFormat
   DEFAULT_COL_COUNT = 3
 
   def initialize(filenames)
-    @pathnames = 
+    @pathnames =
       filenames.map do |filename|
         Pathname(filename)
       end
