@@ -23,45 +23,63 @@ class LongFormat
   end
 
   def run_ls_long_format
-    block_total = 0
-    max_nlink = 0
-    max_user_length = 0
-    max_group_length = 0
-    max_size = 0
-    @pathnames.each do |pathname|
+    row_data = @pathnames.map do |pathname|
       stat = pathname.stat
-      max_nlink = [max_nlink, stat.nlink.to_s.size].max
-      max_user_length = [max_user_length, Etc.getpwuid(stat.uid).name.size].max
-      max_group_length = [max_group_length, Etc.getgrgid(stat.gid).name.size].max
-      max_size = [max_size, stat.size.to_s.size].max
-      block_total += stat.blocks
+      build_data(pathname, stat)
     end
-    rows = ["total #{block_total}"]
-    rows += @pathnames.map do |pathname|
-      format_table(pathname, max_nlink, max_user_length, max_group_length, max_size)
-    end
-    rows.join("\n")
+    block_total = row_data.sum { |data| data[:block] }
+    total = "total #{block_total}"
+    body = render_format(row_data)
+    [total, *body].join("\n")
   end
 
-  def format_table(pathname, max_nlink, max_user_length, max_group_length, max_size)
-    stat = pathname.stat
-    ret = ''
-    ret += stat.file? ? '-' : 'd'
-    mode = format('%#o', stat.mode.to_s)[-3..-1]
-    ret += format_mode(mode)
-    ret += "  #{stat.nlink.to_s.rjust(max_nlink)}"
-    ret += " #{Etc.getpwuid(stat.uid).name.rjust(max_user_length)}"
-    ret += "  #{Etc.getgrgid(stat.gid).name.rjust(max_group_length)}"
-    ret += "  #{stat.size.to_s.rjust(max_size)}"
-    ret += " #{stat.mtime.strftime('%_m %d %R')}"
-    ret + " #{pathname.basename}"
+  private
+
+  def build_data(pathname, stat)
+    {
+      filetype_and_mode: format_filetype_and_mode(stat),
+      nlink: stat.nlink.to_s,
+      user: Etc.getpwuid(stat.uid).name,
+      group: Etc.getgrgid(stat.gid).name,
+      size: stat.size.to_s,
+      mtime: stat.mtime.strftime('%_m %d %R'),
+      filename: pathname.basename,
+      block: stat.blocks
+    }
+  end
+
+  def render_format(row_data)
+    row_data.map do |data|
+      format_table(data, *max_items(row_data))
+    end
+  end
+
+  def max_items(row_data)
+    items = %i[nlink user group size]
+    items.map { |item| row_data.map { |data| data[item].size }.max }
+  end
+
+  def format_filetype_and_mode(stat)
+    filetype = stat.file? ? '-' : 'd'
+    mode = format_mode(stat.mode.to_s(8)[-3..-1])
+    filetype + mode
+  end
+
+  def format_table(data, max_nlink, max_user, max_group, max_size)
+    [
+      data[:filetype_and_mode],
+      "  #{data[:nlink].rjust(max_nlink)}",
+      " #{data[:user].ljust(max_user)}",
+      "  #{data[:group].ljust(max_group)}",
+      "  #{data[:size].rjust(max_size)}",
+      " #{data[:mtime]}",
+      " #{data[:filename]}"
+    ].join
   end
 
   def format_mode(mode)
-    ret = ''
     mode.each_char.map do |c|
-      ret += MODE_TABLE[c]
-    end
-    ret
+      MODE_TABLE[c]
+    end.join
   end
 end
