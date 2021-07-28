@@ -41,7 +41,7 @@ class Game
   end
 
   def added_strike_point(frames, index)
-    if frames[index + 1].strike?
+    if frames[index + 1].strike? && !last_frame?(index + 1)
       STRIKE * 2 + frames[index + 2].first_shot.score
     else
       STRIKE + frames[index + 1].score - frames[index + 1].third_shot.score
