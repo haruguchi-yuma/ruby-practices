@@ -16,8 +16,8 @@ class Game
   private
 
   def divide_into_frames(marks)
-    10.times.map do |n|
-      if n == 9
+    Array.new(10).map.with_index do |_, i|
+      if i == 9
         marks
       elsif marks.first == 'X'
         [marks.shift]

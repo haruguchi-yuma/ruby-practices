@@ -5,7 +5,7 @@ require_relative './shot'
 class Frame
   STRIKE = 10
   def initialize(first_mark, second_mark = nil, third_mark = nil)
-    @shots = [first_mark, second_mark, third_mark].map { |m| Shot.new(m)}
+    @shots = [first_mark, second_mark, third_mark].map { |m| Shot.new(m) }
   end
 
   def first_shot
@@ -38,7 +38,7 @@ class Frame
     elsif strike?
       score_for_strike(next_frame, after_next_frame, index)
     elsif spare?
-      score_for_spare(next_frame, index)
+      score_for_spare(next_frame)
     else
       score
     end
@@ -53,11 +53,11 @@ class Frame
     end
   end
 
-  def score_for_spare(next_frame, index)
+  def score_for_spare(next_frame)
     score + next_frame.first_shot.score
   end
 
-  def last_frame?(i)
-    i == 9
+  def last_frame?(index)
+    index == 9
   end
 end
