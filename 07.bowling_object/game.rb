@@ -7,6 +7,10 @@ class Game
     @frames = divide_into_frames(score.split(',')).map { |frame| Frame.new(*frame) }
   end
 
+  def self.calc_score(score)
+    new(score).calc_score
+  end
+
   def calc_score
     @frames.each_with_index.sum do |frame, i|
       frame.calc_score(@frames[i + 1], @frames[i + 2], i)
