@@ -36,12 +36,8 @@ class Frame
     @shots[0].strike?
   end
 
-  def last_frame?
-    @index == 9
-  end
-
   private
-
+  
   def score_for_strike(next_frame, after_next_frame)
     if next_frame.strike? && after_next_frame
       score + next_frame.score + after_next_frame.first_shot_score
@@ -56,5 +52,9 @@ class Frame
 
   def spare?
     !strike? && @shots.take(2).sum(&:score) == 10
+  end
+
+  def last_frame?
+    @index == 9
   end
 end
