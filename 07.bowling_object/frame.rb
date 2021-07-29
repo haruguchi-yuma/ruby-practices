@@ -9,11 +9,9 @@ class Frame
   end
 
   def calc_score(next_frame, after_next_frame)
-    if last_frame?
-      score
-    elsif strike?
+    if strike? && !last_frame?
       score_for_strike(next_frame, after_next_frame)
-    elsif spare?
+    elsif spare? && !last_frame?
       score_for_spare(next_frame)
     else
       score
