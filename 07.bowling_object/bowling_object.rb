@@ -4,5 +4,4 @@
 require_relative './game'
 
 score = ARGV[0]
-game = Game.new(score)
-puts game.score
+puts Game.calc_score(score)
