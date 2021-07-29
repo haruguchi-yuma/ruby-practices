@@ -3,10 +3,9 @@
 require_relative './shot'
 
 class Frame
-  STRIKE = 10
-
-  def initialize(first_mark, second_mark = nil, third_mark = nil)
-    @shots = [first_mark, second_mark, third_mark].map { |m| Shot.new(m) }
+  def initialize(index, first_shot, second_shot = nil, third_shot = nil)
+    @index = index
+    @shots = [first_shot, second_shot, third_shot]
   end
 
   def first_shot
@@ -22,7 +21,7 @@ class Frame
   end
 
   def score
-    @shots.sum(&:score)
+    @shots.compact.sum(&:score)
   end
 
   def strike?
@@ -33,11 +32,11 @@ class Frame
     !strike? && @shots.take(2).sum(&:score) == 10
   end
 
-  def calc_score(next_frame, after_next_frame, index)
-    if last_frame?(index)
+  def calc_score(next_frame, after_next_frame)
+    if last_frame?
       score
     elsif strike?
-      score_for_strike(next_frame, after_next_frame, index)
+      score_for_strike(next_frame, after_next_frame)
     elsif spare?
       score_for_spare(next_frame)
     else
@@ -45,12 +44,12 @@ class Frame
     end
   end
 
-  def score_for_strike(next_frame, after_next_frame, index)
+  def score_for_strike(next_frame, after_next_frame)
     # 10フレーム目の2投目がストライクだった場合2フレーム先はないので、適応させない
-    if next_frame.strike? && !next_frame.last_frame?(index + 1)
-      STRIKE * 2 + after_next_frame.first_shot.score
+    if next_frame.strike? && !next_frame.last_frame?
+      score + next_frame.score + after_next_frame.first_shot.score
     else
-      STRIKE + next_frame.first_shot.score + next_frame.second_shot.score
+      score + next_frame.first_shot.score + next_frame.second_shot.score
     end
   end
 
@@ -58,7 +57,7 @@ class Frame
     score + next_frame.first_shot.score
   end
 
-  def last_frame?(index)
-    index == 9
+  def last_frame?
+    @index == 9
   end
 end
