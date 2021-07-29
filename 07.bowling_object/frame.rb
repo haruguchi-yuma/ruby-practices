@@ -43,8 +43,7 @@ class Frame
   private
 
   def score_for_strike(next_frame, after_next_frame)
-    # 10フレーム目の2投目がストライクだった場合2フレーム先はないので、適応させない
-    if next_frame.strike? && !next_frame.last_frame?
+    if next_frame.strike? && after_next_frame
       score + next_frame.score + after_next_frame.first_shot_score
     else
       score + next_frame.first_shot_score + next_frame.second_shot_score
