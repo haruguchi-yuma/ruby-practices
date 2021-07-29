@@ -23,7 +23,7 @@ class Game
 
   def divide_into_frames(score)
     marks = score.split(',')
-    shots = marks.map { |m| Shot.new(m)}
+    shots = marks.map { |m| Shot.new(m) }
     Array.new(10) do |i|
       if i == 9
         shots
