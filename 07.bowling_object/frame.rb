@@ -4,6 +4,7 @@ require_relative './shot'
 
 class Frame
   STRIKE = 10
+
   def initialize(first_mark, second_mark = nil, third_mark = nil)
     @shots = [first_mark, second_mark, third_mark].map { |m| Shot.new(m) }
   end
@@ -29,7 +30,7 @@ class Frame
   end
 
   def spare?
-    @shots.take(2).sum(&:score) == 10
+    !strike? && @shots.take(2).sum(&:score) == 10
   end
 
   def calc_score(next_frame, after_next_frame, index)
