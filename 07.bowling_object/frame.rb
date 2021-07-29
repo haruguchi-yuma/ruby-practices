@@ -8,30 +8,6 @@ class Frame
     @shots = [first_shot, second_shot, third_shot]
   end
 
-  def first_shot
-    @shots[0]
-  end
-
-  def second_shot
-    @shots[1]
-  end
-
-  def third_shot
-    @shots[2]
-  end
-
-  def score
-    @shots.compact.sum(&:score)
-  end
-
-  def strike?
-    first_shot.strike?
-  end
-
-  def spare?
-    !strike? && @shots.take(2).sum(&:score) == 10
-  end
-
   def calc_score(next_frame, after_next_frame)
     if last_frame?
       score
@@ -44,20 +20,44 @@ class Frame
     end
   end
 
-  def score_for_strike(next_frame, after_next_frame)
-    # 10フレーム目の2投目がストライクだった場合2フレーム先はないので、適応させない
-    if next_frame.strike? && !next_frame.last_frame?
-      score + next_frame.score + after_next_frame.first_shot.score
-    else
-      score + next_frame.first_shot.score + next_frame.second_shot.score
-    end
+  protected
+
+  def first_shot_score
+    @shots[0].score
   end
 
-  def score_for_spare(next_frame)
-    score + next_frame.first_shot.score
+  def second_shot_score
+    @shots[1].score
+  end
+
+  def score
+    @shots.compact.sum(&:score)
+  end
+
+  def strike?
+    @shots[0].strike?
   end
 
   def last_frame?
     @index == 9
+  end
+
+  private
+
+  def score_for_strike(next_frame, after_next_frame)
+    # 10フレーム目の2投目がストライクだった場合2フレーム先はないので、適応させない
+    if next_frame.strike? && !next_frame.last_frame?
+      score + next_frame.score + after_next_frame.first_shot_score
+    else
+      score + next_frame.first_shot_score + next_frame.second_shot_score
+    end
+  end
+
+  def score_for_spare(next_frame)
+    score + next_frame.first_shot_score
+  end
+
+  def spare?
+    !strike? && @shots.take(2).sum(&:score) == 10
   end
 end
