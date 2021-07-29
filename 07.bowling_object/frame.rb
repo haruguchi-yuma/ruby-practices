@@ -37,7 +37,7 @@ class Frame
   end
 
   private
-  
+
   def score_for_strike(next_frame, after_next_frame)
     if next_frame.strike? && after_next_frame
       score + next_frame.score + after_next_frame.first_shot_score
