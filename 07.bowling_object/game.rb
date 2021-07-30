@@ -28,7 +28,7 @@ class Game
       if i == 9
         shots
       elsif shots.first.strike?
-        [shots.shift]
+        shots.shift(1)
       else
         shots.shift(2)
       end
