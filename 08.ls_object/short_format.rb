@@ -12,7 +12,7 @@ class ShortFormat
       end
   end
 
-  def run_ls_short_format
+  def run
     filenames = @pathnames.map(&:basename).map(&:to_s)
     max_filename_count = filenames.map(&:size).max
     row_count = (filenames.count.to_f / DEFAULT_COL_COUNT).ceil

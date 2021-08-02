@@ -19,13 +19,9 @@ class Ls
         Dir.glob(@pathnames).sort
       end
     filenames = filenames.reverse if @params[:reverse]
-    if @params[:detail]
-      long_format = LongFormat.new(filenames)
-      long_format.run_ls_long_format
-    else
-      short_format = ShortFormat.new(filenames)
-      short_format.run_ls_short_format
-    end
+    
+    format = (@params[:detail] ? LongFormat : ShortFormat).new(filenames)
+    format.run
   end
 end
 

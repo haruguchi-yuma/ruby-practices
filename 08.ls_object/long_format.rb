@@ -22,7 +22,7 @@ class LongFormat
       end
   end
 
-  def run_ls_long_format
+  def run
     row_data = @pathnames.map do |pathname|
       stat = pathname.stat
       build_data(pathname, stat)
