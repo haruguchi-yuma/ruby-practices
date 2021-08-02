@@ -42,7 +42,7 @@ class LongFormat
       user: Etc.getpwuid(stat.uid).name,
       group: Etc.getgrgid(stat.gid).name,
       size: stat.size.to_s,
-      mtime: stat.mtime.strftime('%_m %d %R'),
+      mtime: stat.mtime.strftime('%_m %e %R'),
       filename: pathname.basename,
       block: stat.blocks
     }
